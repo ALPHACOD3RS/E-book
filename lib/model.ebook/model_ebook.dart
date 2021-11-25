@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'model_ebook.g.dart';
 
 @JsonSerializable()
-class modelEbook {
+class ModelEbook {
   int id;
   String title;
   String photo;
@@ -20,7 +20,7 @@ class modelEbook {
   int rating;
   int free;
 
-  modelEbook({
+  ModelEbook({
     required this.id,
     required this.title,
     required this.photo,
@@ -37,7 +37,7 @@ class modelEbook {
     required this.free,
   });
 
-  factory modelEbook.freeJson(Map<String, dynamic> json) =>
+  factory ModelEbook.freeJson(Map<String, dynamic> json) =>
       _$modelEbookFromJson(json);
 
   Map<String, dynamic> toJson() => _$modelEbookToJson(this);
