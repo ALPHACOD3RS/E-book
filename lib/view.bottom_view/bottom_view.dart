@@ -31,9 +31,12 @@ class _BottomViewState extends State<BottomView> {
           // ignore: prefer_const_literals_to_create_immutables
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Library'),
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Favorite'),
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Profile'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.library_books), label: 'Library'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.bookmark_border), label: 'Favorite'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle_outlined), label: 'Profile'),
           ],
         ),
       ),
