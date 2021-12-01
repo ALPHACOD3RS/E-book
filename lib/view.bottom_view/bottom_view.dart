@@ -39,6 +39,7 @@ class _BottomViewState extends State<BottomView> {
                 icon: Icon(Icons.account_circle_outlined), label: 'Profile'),
           ],
         ),
+        body: body[currentIndex],
       ),
     );
   }
