@@ -1,9 +1,11 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:ebookapp/controller/con_coming.dart';
 import 'package:ebookapp/controller/con_latest.dart';
 import 'package:ebookapp/controller/con_slider.dart';
-import 'package:ebookapp/model.ebook/model_ebook.dart';
+import 'package:ebookapp/model/ebook/model_ebook.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
@@ -18,11 +20,15 @@ class _HomeState extends State<Home> {
   Future<List<ModelEbook>>? getLatest;
   List<ModelEbook> listlatest = [];
 
+  Future<List<ModelEbook>>? getComing;
+  List<ModelEbook> listComing = [];
+
   @override
   void initState() {
     super.initState();
     getSlider = featchSlider(listSlider);
     getLatest = featchLatest(listlatest);
+    getComing = featchComing(listComing);
   }
 
   @override
@@ -209,11 +215,102 @@ class _HomeState extends State<Home> {
                           }
                         },
                       ),
-                    )
+                    ),
                     //ads here
 
                     //coming soon
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: FutureBuilder(
+                        future: getComing,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<ModelEbook>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return snapshot.data!.length == 0
+                                ? Container()
+                                : Container(
+                                    color: Colors.blueGrey.withOpacity(0.5),
+                                    padding: EdgeInsets.only(top: 2.0.h),
+                                    child: Stack(
+                                      children: [
+                                        Center(
+                                          child: Container(
+                                            padding: EdgeInsets.all(6),
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 12.h, top: 6.h),
+                                              child: const Text(
+                                                'Coming Soon',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 35,
+                                                    letterSpacing: 6),
 
+                                                //textAlign: TextAlign.right,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: snapshot.data!.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {},
+                                                child: Container(
+                                                  padding: EdgeInsets.all(8),
+                                                  child: Column(
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: Image.network(
+                                                          listComing[index]
+                                                              .photo,
+                                                          fit: BoxFit.cover,
+                                                          height: 15.h,
+                                                          width: 24.w,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 0.5.h,
+                                                      ),
+                                                      Container(
+                                                        width: 24.w,
+                                                        child: Text(
+                                                          listComing[index]
+                                                              .title,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          height: 24.h,
+                                        )
+                                      ],
+                                    ),
+                                  );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                    )
                     //catagory
                   ],
                 );

@@ -3,5 +3,6 @@ class ApiConstant {
   String api = "api.php?";
   String slider = "slider";
   String latest = "latest";
-  String catagory = "catagory";
+  String category = "category";
+  String coming = "coming";
 }

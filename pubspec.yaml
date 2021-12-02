@@ -39,6 +39,7 @@ dependencies:
   dio: ^4.0.0
   card_swiper: ^1.0.4
   sizer: ^2.0.13
+  
 
 dev_dependencies:
   flutter_test:

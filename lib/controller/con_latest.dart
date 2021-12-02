@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:ebookapp/controller/api.dart';
-import 'package:ebookapp/model.ebook/model_ebook.dart';
+import 'package:ebookapp/model/ebook/model_ebook.dart';
 
 Future<List<ModelEbook>> featchLatest(List<ModelEbook> fetch) async {
   var request = await Dio()

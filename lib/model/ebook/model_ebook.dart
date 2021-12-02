@@ -38,7 +38,7 @@ class ModelEbook {
   });
 
   factory ModelEbook.freeJson(Map<String, dynamic> json) =>
-      _$modelEbookFromJson(json);
+      _$ModelEbookFromJson(json);
 
-  Map<String, dynamic> toJson() => _$modelEbookToJson(this);
+  Map<String, dynamic> toJson() => _$ModelEbookToJson(this);
 }
