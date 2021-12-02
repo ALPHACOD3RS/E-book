@@ -1,10 +1,13 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:ebookapp/controller/con_category.dart';
 import 'package:ebookapp/controller/con_coming.dart';
 import 'package:ebookapp/controller/con_latest.dart';
 import 'package:ebookapp/controller/con_slider.dart';
+import 'package:ebookapp/model/category/model_category.dart';
 import 'package:ebookapp/model/ebook/model_ebook.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sizer/sizer.dart';
 
@@ -23,18 +26,40 @@ class _HomeState extends State<Home> {
   Future<List<ModelEbook>>? getComing;
   List<ModelEbook> listComing = [];
 
+  Future<List<ModelCategory>>? getCategory;
+  List<ModelCategory> listCategory = [];
+
   @override
   void initState() {
     super.initState();
     getSlider = featchSlider(listSlider);
     getLatest = featchLatest(listlatest);
     getComing = featchComing(listComing);
+    getCategory = featchCategory(listCategory);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.grey.withOpacity(0.5),
+        title: Row(
+          children: [
+            Container(
+              child: Icon(Icons.account_circle_rounded, color: Colors.black),
+            ),
+            SizedBox(
+              width: 2.w,
+            ),
+            Text(
+              'Hello',
+              style: TextStyle(color: Colors.black),
+            )
+          ],
+        ),
+        actions: [],
+      ),
       body: Container(
         child: SingleChildScrollView(
           child: FutureBuilder(
@@ -126,7 +151,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
 
-                    //latest ebook
+                    //latest ebook>>>>>>>>>>>>>>>>>>>>>>>
                     Container(
                       child: FutureBuilder(
                         future: getLatest,
@@ -216,7 +241,7 @@ class _HomeState extends State<Home> {
                         },
                       ),
                     ),
-                    //ads here
+                    //ads here>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
                     //coming soon
                     Container(
@@ -310,8 +335,94 @@ class _HomeState extends State<Home> {
                           }
                         },
                       ),
+                    ),
+                    //catagory>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+                    Container(
+                      child: FutureBuilder(
+                        future: getCategory,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<ModelCategory>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return Column(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'Category',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                SizedBox(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: snapshot.data!.length,
+                                    //scrollDirection: Axis.horizontal,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return GestureDetector(
+                                        onTap: () {},
+                                        child: Container(
+                                          padding: EdgeInsets.all(5),
+                                          child: Stack(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: Image.network(
+                                                  listCategory[index].photoCat,
+                                                  fit: BoxFit.cover,
+                                                  height: 15.h,
+                                                  width: 24.w,
+                                                ),
+                                              ),
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: Container(
+                                                  color: Colors.black
+                                                      .withOpacity(0.6),
+                                                  height: 15.h,
+                                                  width: 12.h,
+                                                ),
+                                              ),
+                                              Positioned(
+                                                child: Center(
+                                                  child: Text(
+                                                    listCategory[index].name,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                    maxLines: 1,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                                bottom: 0,
+                                                top: 0,
+                                                right: 0,
+                                                left: 0,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  height: 14.h,
+                                )
+                              ],
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
                     )
-                    //catagory
                   ],
                 );
               } else {

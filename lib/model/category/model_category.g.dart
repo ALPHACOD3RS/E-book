@@ -11,7 +11,7 @@ ModelCategory _$ModelCategoryFromJson(Map<String, dynamic> json) {
     catId: json['catId'] as int,
     photoCat: json['photoCat'] as String,
     name: json['name'] as String,
-    status: json['status'] as String,
+    status: json['status'] as int,
   );
 }
 

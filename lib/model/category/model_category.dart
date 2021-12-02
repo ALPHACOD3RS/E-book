@@ -6,7 +6,7 @@ class ModelCategory {
   int catId;
   String photoCat;
   String name;
-  String status;
+  int status;
 
   ModelCategory(
       {required this.catId,
