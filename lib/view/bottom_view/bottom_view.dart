@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:ebookapp/view.bottom_view/bottom_favorite.dart';
-import 'package:ebookapp/view.bottom_view/bottom_library.dart';
-import 'package:ebookapp/view.bottom_view/bottom_profile.dart';
-import 'package:ebookapp/view.bottom_view/home.dart';
+import 'package:ebookapp/view/bottom_view/bottom_favorite.dart';
+import 'package:ebookapp/view/bottom_view/bottom_library.dart';
+import 'package:ebookapp/view/bottom_view/bottom_profile.dart';
+import 'package:ebookapp/view/bottom_view/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

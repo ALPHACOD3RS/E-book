@@ -1,7 +1,10 @@
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:ebookapp/view.bottom_view/bottom_view.dart';
+import 'package:ebookapp/view/bottom_view/bottom_view.dart';
+import 'package:ebookapp/view/bottom_view/home.dart';
+import 'package:ebookapp/view/login/ebook_login.dart';
+import 'package:ebookapp/view/register/ebook_register.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home: BottomView());
+            home: EbookLogin());
       },
     );
   }

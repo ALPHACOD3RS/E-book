@@ -5,4 +5,6 @@ class ApiConstant {
   String latest = "latest";
   String category = "category";
   String coming = "coming";
+  String register = "utils/register.php";
+  String login = "utils/login.php";
 }
