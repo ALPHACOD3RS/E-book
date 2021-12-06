@@ -1,10 +1,13 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:dio/dio.dart';
+import 'package:ebookapp/controller/api.dart';
 import 'package:ebookapp/controller/con_category.dart';
 import 'package:ebookapp/controller/con_coming.dart';
 import 'package:ebookapp/controller/con_latest.dart';
 import 'package:ebookapp/controller/con_slider.dart';
 import 'package:ebookapp/model/category/model_category.dart';
 import 'package:ebookapp/model/ebook/model_ebook.dart';
+import 'package:ebookapp/widget/common_pref.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -29,6 +32,8 @@ class _HomeState extends State<Home> {
   Future<List<ModelCategory>>? getCategory;
   List<ModelCategory> listCategory = [];
 
+  String id = '', name = '', email = '', photo = '';
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +41,30 @@ class _HomeState extends State<Home> {
     getLatest = featchLatest(listlatest);
     getComing = featchComing(listComing);
     getCategory = featchCategory(listCategory);
+    loadLogin().then((value) {
+      setState(() {
+        id = value[0];
+        name = value[1];
+        email = value[2];
+        photo = value[3];
+        getPhoto(id);
+      });
+    });
+  }
+
+  Future getPhoto(String idOfUser) async {
+    var req = await Dio().post(ApiConstant().baseUrl + ApiConstant().viewPhoto,
+        data: {'id': idOfUser});
+    var decode = req.data;
+    if (decode != "no_img") {
+      setState(() {
+        photo = decode;
+      });
+    } else {
+      setState(() {
+        photo = "";
+      });
+    }
   }
 
   @override
@@ -47,13 +76,26 @@ class _HomeState extends State<Home> {
         title: Row(
           children: [
             Container(
-              child: Icon(Icons.account_circle_rounded, color: Colors.black),
-            ),
+                child: photo == ''
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        child: Image.asset(
+                          'assest/image/noimage.jpg',
+                          fit: BoxFit.cover,
+                          width: 14.w,
+                          height: 7,
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                        child: Image.network(photo,
+                            fit: BoxFit.cover, width: 13.w, height: 45),
+                      )),
             SizedBox(
               width: 2.w,
             ),
             Text(
-              'Hello',
+              name,
               style: TextStyle(color: Colors.black),
             )
           ],

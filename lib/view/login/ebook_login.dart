@@ -72,6 +72,18 @@ class _EbookLoginState extends State<EbookLogin> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    loadLogin().then((value) {
+      setState(() {
+        if (value != null) {
+          pushAndRemove(context, BottomView());
+        }
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
