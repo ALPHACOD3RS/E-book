@@ -1,22 +1,25 @@
 import 'package:ebookapp/controller/con_latest.dart';
+import 'package:ebookapp/controller/con_pdf_by_cat.dart';
 import 'package:ebookapp/model/ebook/model_ebook.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class BottomLibrary extends StatefulWidget {
+class EbookCategory extends StatefulWidget {
+  int catId;
+  EbookCategory({required this.catId});
   @override
-  _BottomLibraryState createState() => _BottomLibraryState();
+  _EbookCategoryState createState() => _EbookCategoryState();
 }
 
-class _BottomLibraryState extends State<BottomLibrary> {
+class _EbookCategoryState extends State<EbookCategory> {
   Future<List<ModelEbook>>? getLatest;
   List<ModelEbook> listlatest = [];
 
   @override
   void initState() {
     super.initState();
-    getLatest = featchLatest(listlatest);
+    getLatest = fetchByCategory(listlatest, widget.catId);
   }
 
   @override
@@ -28,6 +31,13 @@ class _BottomLibraryState extends State<BottomLibrary> {
         title: const Text(
           'Library',
           style: TextStyle(color: Colors.black),
+        ),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
         ),
       ),
       body: Container(
@@ -50,6 +60,10 @@ class _BottomLibraryState extends State<BottomLibrary> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
+                            /*child: new Container(
+                                child: FadeInImage.assetNetwork(
+                                    placeholder: 'assets/log.jpg',
+                                    image: listlatest[index].photo)),*/
                             child: Image.network(
                               listlatest[index].photo,
                               fit: BoxFit.cover,

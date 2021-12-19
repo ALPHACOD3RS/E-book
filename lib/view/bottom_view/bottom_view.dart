@@ -16,8 +16,8 @@ class _BottomViewState extends State<BottomView> {
   int currentIndex = 0;
   List<Widget> body = [
     Home(),
-    BottomFavorite(),
     BottomLibrary(),
+    BottomFavorite(),
     BottomProfile()
   ];
   @override

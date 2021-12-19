@@ -43,6 +43,15 @@ dependencies:
   http: ^0.13.4
   rflutter_alert: ^2.0.4
   shared_preferences: ^2.0.7
+  flutter_html: ^2.1.1
+  future_progress_dialog: ^0.2.0
+  share: ^2.0.4
+  package_info: ^2.0.2
+  google_mobile_ads: ^1.0.1
+  unity_ads_plugin: ^0.2.4
+  #startapp_sdk_flutter: ^0.0.8
+  flutter_cached_pdfview: ^0.4.1
+  
   
 
 dev_dependencies:

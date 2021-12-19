@@ -1,5 +1,10 @@
+//import 'dart:math';
+
 import 'package:card_swiper/card_swiper.dart';
 import 'package:dio/dio.dart';
+import 'package:ebookapp/controller/ads/admob.dart';
+import 'package:ebookapp/controller/ads/con_ads.dart';
+import 'package:ebookapp/controller/ads/unity.dart';
 import 'package:ebookapp/controller/api.dart';
 import 'package:ebookapp/controller/con_category.dart';
 import 'package:ebookapp/controller/con_coming.dart';
@@ -7,12 +12,17 @@ import 'package:ebookapp/controller/con_latest.dart';
 import 'package:ebookapp/controller/con_slider.dart';
 import 'package:ebookapp/model/category/model_category.dart';
 import 'package:ebookapp/model/ebook/model_ebook.dart';
+import 'package:ebookapp/view/detail/ebook_detail.dart';
+import 'package:ebookapp/view/pdf_by_cat/ebook_category.dart';
 import 'package:ebookapp/widget/common_pref.dart';
+import 'package:ebookapp/widget/ebook_routers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sizer/sizer.dart';
+import 'package:unity_ads_plugin/unity_ads.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -34,13 +44,46 @@ class _HomeState extends State<Home> {
 
   String id = '', name = '', email = '', photo = '';
 
+  //this variables for ads
+  late BannerAd _bannerAd;
+  bool _isBannerAdsReady = false;
+
+  String admobBanner = '', admobInterstitial = '', adsMode = '';
+  // String androidAppId = '', iosAppId = '', accountAppId = '';
+  String androidBanner = '';
+
   @override
   void initState() {
     super.initState();
+    _initGoogleAdmob();
+
     getSlider = featchSlider(listSlider);
     getLatest = featchLatest(listlatest);
     getComing = featchComing(listComing);
     getCategory = featchCategory(listCategory);
+    fetchAds().then((value) {
+      setState(() {
+        adsMode = value[0].ads;
+        admobBanner = value[0].banner;
+        androidBanner = value[0].unityBanner;
+        admobInterstitial = value[0].interstitial;
+        _bannerAd = BannerAd(
+            adUnitId: AdmobManager().bannerAdsUnitId(admobBanner, admobBanner),
+            request: AdRequest(),
+            size: AdSize.banner,
+            listener: BannerAdListener(onAdLoaded: (_) {
+              setState(() {
+                _isBannerAdsReady = true;
+              });
+            }, onAdFailedToLoad: (ad, err) {
+              print("admob ads any error $ad and error is $err");
+              _isBannerAdsReady = false;
+              ad.dispose();
+            }));
+        _bannerAd.load();
+      });
+    });
+
     loadLogin().then((value) {
       setState(() {
         id = value[0];
@@ -50,6 +93,10 @@ class _HomeState extends State<Home> {
         getPhoto(id);
       });
     });
+  }
+
+  Future<InitializationStatus> _initGoogleAdmob() {
+    return MobileAds.instance.initialize();
   }
 
   Future getPhoto(String idOfUser) async {
@@ -68,11 +115,17 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void dispose() {
+    _bannerAd.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.grey.withOpacity(0.5),
+        backgroundColor: Colors.white70,
         title: Row(
           children: [
             Container(
@@ -80,7 +133,7 @@ class _HomeState extends State<Home> {
                     ? ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                         child: Image.asset(
-                          'assest/image/noimage.jpg',
+                          'assets/image/noimage.jpg',
                           fit: BoxFit.cover,
                           width: 14.w,
                           height: 7,
@@ -128,7 +181,15 @@ class _HomeState extends State<Home> {
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      pushPage(
+                                          context,
+                                          EbookDetail(
+                                            ebookId: listSlider[index].id,
+                                            status:
+                                                listSlider[index].statusNews,
+                                          ));
+                                    },
                                     child: Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Container(
@@ -222,7 +283,16 @@ class _HomeState extends State<Home> {
                                             "what is index $index and snapshot ${snapshot.data!.length}");
                                         if (index == snapshot.data!.length) {
                                           return GestureDetector(
-                                            onTap: () {},
+                                            onTap: () {
+                                              pushPage(
+                                                  context,
+                                                  EbookDetail(
+                                                    ebookId:
+                                                        listlatest[index].id,
+                                                    status: listlatest[index]
+                                                        .statusNews,
+                                                  ));
+                                            },
                                             child: Container(
                                               width: 24.w,
                                               padding:
@@ -273,7 +343,7 @@ class _HomeState extends State<Home> {
                                           );
                                         }
                                       }),
-                                  height: 22.h,
+                                  height: 25.h,
                                 )
                               ],
                             );
@@ -285,6 +355,31 @@ class _HomeState extends State<Home> {
                     ),
                     //ads here>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+                    adsMode == "1"
+                        ? _isBannerAdsReady
+                            ? Align(
+                                alignment: Alignment.topCenter,
+                                child: Container(
+                                  width: _bannerAd.size.width.toDouble(),
+                                  height: _bannerAd.size.height.toDouble(),
+                                  child: AdWidget(
+                                    ad: _bannerAd,
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                child: Text('Loading'),
+                              )
+                        : adsMode == "2"
+                            ? UnityBannerAd(
+                                placementId: UnityManager()
+                                    .gameId(androidBanner, androidBanner),
+                                listener: (state, arg) {
+                                  print(
+                                      "unity ads in flutter $state and this $arg");
+                                },
+                              )
+                            : Container(),
                     //coming soon
                     Container(
                       width: MediaQuery.of(context).size.width,
@@ -306,14 +401,15 @@ class _HomeState extends State<Home> {
                                             padding: EdgeInsets.all(6),
                                             child: Container(
                                               margin: EdgeInsets.only(
-                                                  left: 12.h, top: 6.h),
+                                                  left: 16.h, top: 6.h),
                                               child: const Text(
                                                 'Coming Soon',
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 35,
-                                                    letterSpacing: 6),
+                                                    fontSize: 30,
+                                                    letterSpacing:
+                                                        4), /*changed*/
 
                                                 //textAlign: TextAlign.right,
                                               ),
@@ -328,7 +424,18 @@ class _HomeState extends State<Home> {
                                             itemBuilder: (BuildContext context,
                                                 int index) {
                                               return GestureDetector(
-                                                onTap: () {},
+                                                onTap: () {
+                                                  pushPage(
+                                                      context,
+                                                      EbookDetail(
+                                                        ebookId:
+                                                            listComing[index]
+                                                                .id,
+                                                        status:
+                                                            listComing[index]
+                                                                .statusNews,
+                                                      ));
+                                                },
                                                 child: Container(
                                                   padding: EdgeInsets.all(8),
                                                   child: Column(
@@ -349,7 +456,7 @@ class _HomeState extends State<Home> {
                                                         height: 0.5.h,
                                                       ),
                                                       Container(
-                                                        width: 24.w,
+                                                        width: 25.w,
                                                         child: Text(
                                                           listComing[index]
                                                               .title,
@@ -367,7 +474,7 @@ class _HomeState extends State<Home> {
                                               );
                                             },
                                           ),
-                                          height: 24.h,
+                                          height: 25.h,
                                         )
                                       ],
                                     ),
@@ -407,7 +514,13 @@ class _HomeState extends State<Home> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          pushPage(
+                                              context,
+                                              EbookCategory(
+                                                  catId: listCategory[index]
+                                                      .catId));
+                                        },
                                         child: Container(
                                           padding: EdgeInsets.all(5),
                                           child: Stack(
@@ -429,7 +542,7 @@ class _HomeState extends State<Home> {
                                                   color: Colors.black
                                                       .withOpacity(0.6),
                                                   height: 15.h,
-                                                  width: 12.h,
+                                                  width: 24.w,
                                                 ),
                                               ),
                                               Positioned(
