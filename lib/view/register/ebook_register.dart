@@ -267,7 +267,13 @@ class _EbookRegisterState extends State<EbookRegister> {
                         width: 10,
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EbookLogin()),
+                          );
+                        },
                         child: Text(
                           'Login',
                           style: TextStyle(color: Colors.blue, fontSize: 17),

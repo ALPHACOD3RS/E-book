@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:ebookapp/controller/api.dart';
 import 'package:ebookapp/view/bottom_view/bottom_view.dart';
+import 'package:ebookapp/view/register/ebook_register.dart';
 import 'package:ebookapp/widget/common_pref.dart';
 import 'package:ebookapp/widget/ebook_routers.dart';
 import 'package:flutter/cupertino.dart';
@@ -137,7 +138,7 @@ class _EbookLoginState extends State<EbookLogin> {
                     autofocus: false,
                     decoration: InputDecoration(
                         hintText: 'Enetr your password',
-                        prefixIcon: Icon(
+                        prefixIcon: const Icon(
                           Icons.lock_outline,
                           color: Colors.black,
                         ),
@@ -162,18 +163,18 @@ class _EbookLoginState extends State<EbookLogin> {
                         widget: widget);
                   },
                   child: Container(
-                      margin: EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                           right: 20, left: 20, bottom: 5, top: 17),
                       padding: EdgeInsets.only(
                           top: 1.2.h, bottom: 1.2.h, right: 1.5.w, left: 1.5.w),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Colors.blue,
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       width: MediaQuery.of(context).size.width,
                       child: !visibleLoading
                           ? Container(
                               width: MediaQuery.of(context).size.width,
-                              child: Text(
+                              child: const Text(
                                 'Login',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 17),
@@ -205,16 +206,22 @@ class _EbookLoginState extends State<EbookLogin> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Dont have an Account?',
                           style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         GestureDetector(
-                          onTap: () {},
-                          child: Text(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EbookRegister()),
+                            );
+                          },
+                          child: const Text(
                             'Register',
                             style: TextStyle(color: Colors.blue, fontSize: 17),
                           ),

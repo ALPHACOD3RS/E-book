@@ -2,6 +2,9 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
+import 'package:ebookapp/controller/ads/admob.dart';
+import 'package:ebookapp/controller/ads/con_ads.dart';
+import 'package:ebookapp/controller/ads/unity.dart';
 import 'package:ebookapp/controller/api.dart';
 import 'package:ebookapp/view/login/ebook_login.dart';
 import 'package:ebookapp/widget/common_pref.dart';
@@ -12,10 +15,12 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+import 'package:unity_ads_plugin/ad/unity_banner_ad.dart';
 
 class BottomProfile extends StatefulWidget {
   @override
@@ -28,17 +33,53 @@ class _BottomProfileState extends State<BottomProfile> {
   File _file = File('');
   final picker = ImagePicker();
 
+  late BannerAd _bannerAd;
+  bool _isBannerAdsReady = false;
+
+  String admobBanner = '', admobInterstitial = '', adsMode = '';
+  // String androidAppId = '', iosAppId = '', accountAppId = '';
+  String androidBanner = '';
+
   @override
   void initState() {
     super.initState();
+    _initGoogleAdmob();
     loadLogin().then((value) {
       setState(() {
         id = value[0];
         name = value[1];
         email = value[2];
         displayPhoto(id);
+
+        fetchAds().then((value) {
+          setState(() {
+            adsMode = value[0].ads;
+            admobBanner = value[0].banner;
+            androidBanner = value[0].unityBanner;
+            admobInterstitial = value[0].interstitial;
+            _bannerAd = BannerAd(
+                adUnitId:
+                    AdmobManager().bannerAdsUnitId(admobBanner, admobBanner),
+                request: AdRequest(),
+                size: AdSize.banner,
+                listener: BannerAdListener(onAdLoaded: (_) {
+                  setState(() {
+                    _isBannerAdsReady = true;
+                  });
+                }, onAdFailedToLoad: (ad, err) {
+                  print("admob ads any error $ad and error is $err");
+                  _isBannerAdsReady = false;
+                  ad.dispose();
+                }));
+            _bannerAd.load();
+          });
+        });
       });
     });
+  }
+
+  Future<InitializationStatus> _initGoogleAdmob() {
+    return MobileAds.instance.initialize();
   }
 
   Future updatePhotoUser() async {
@@ -287,7 +328,32 @@ class _BottomProfileState extends State<BottomProfile> {
                           fontWeight: FontWeight.w600),
                     ),
                   ),
-                )
+                ),
+                adsMode == "1"
+                    ? _isBannerAdsReady
+                        ? Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              width: _bannerAd.size.width.toDouble(),
+                              height: _bannerAd.size.height.toDouble(),
+                              child: AdWidget(
+                                ad: _bannerAd,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            child: Text('Loading'),
+                          )
+                    : adsMode == "2"
+                        ? UnityBannerAd(
+                            placementId: UnityManager()
+                                .gameId(androidBanner, androidBanner),
+                            listener: (state, arg) {
+                              print(
+                                  "unity ads in flutter $state and this $arg");
+                            },
+                          )
+                        : Container(),
               ],
             ),
           ),
