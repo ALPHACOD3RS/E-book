@@ -98,18 +98,22 @@ class _BottomProfileState extends State<BottomProfile> {
   }
 
   Future displayPhoto(String userId) async {
-    var request = await Dio().post(
-        ApiConstant().baseUrl + ApiConstant().viewPhoto,
-        data: {'id': userId});
-    var decode = request.data;
-    if (decode != "no_img") {
-      setState(() {
-        photoUser = decode;
-      });
-    } else {
-      setState(() {
-        photoUser = '';
-      });
+    try {
+      var request = await Dio().post(
+          ApiConstant().baseUrl + ApiConstant().viewPhoto,
+          data: {'id': userId});
+      var decode = request.data;
+      if (decode != "no_img") {
+        setState(() {
+          photoUser = decode;
+        });
+      } else {
+        setState(() {
+          photoUser = '';
+        });
+      }
+    } catch (e) {
+      print('Network Problem');
     }
   }
 
@@ -329,6 +333,8 @@ class _BottomProfileState extends State<BottomProfile> {
                     ),
                   ),
                 ),
+
+                //ads are here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 adsMode == "1"
                     ? _isBannerAdsReady
                         ? Align(
@@ -354,6 +360,7 @@ class _BottomProfileState extends State<BottomProfile> {
                             },
                           )
                         : Container(),
+                //ads>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
               ],
             ),
           ),
