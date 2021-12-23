@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
@@ -90,13 +91,19 @@ class _EbookDetailState extends State<EbookDetail> {
   }
 
   checkFavorites(String userId) async {
-    var data = {'id_course': widget.ebookId, 'id_user': userId};
-    var checkFav = await Dio()
-        .post(ApiConstant().baseUrl + ApiConstant().checkFavorite, data: data);
-    var response = checkFav.data;
-    setState(() {
-      checkFavorite = response;
-    });
+    try {
+      var data = {'id_course': widget.ebookId, 'id_user': userId};
+      var checkFav = await Dio().post(
+          ApiConstant().baseUrl + ApiConstant().checkFavorite,
+          data: data);
+      var response = checkFav.data;
+      setState(() {
+        checkFavorite = response;
+      });
+    } catch (e) {
+      var err = "Network problem";
+      print(err);
+    }
   }
 
   @override

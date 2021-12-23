@@ -20,6 +20,7 @@ class _BottomViewState extends State<BottomView> {
     BottomFavorite(),
     BottomProfile()
   ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

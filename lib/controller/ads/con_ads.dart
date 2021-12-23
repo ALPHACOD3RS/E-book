@@ -24,5 +24,6 @@ Future<List<ModelAds>> fetchAds() async {
         unityInterstitial: ad['unityinterstitial'],
         unityReward: ad['unityreward']));
   }
+
   return adsFetchFromServer;
 }

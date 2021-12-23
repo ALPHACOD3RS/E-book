@@ -100,17 +100,22 @@ class _HomeState extends State<Home> {
   }
 
   Future getPhoto(String idOfUser) async {
-    var req = await Dio().post(ApiConstant().baseUrl + ApiConstant().viewPhoto,
-        data: {'id': idOfUser});
-    var decode = req.data;
-    if (decode != "no_img") {
-      setState(() {
-        photo = decode;
-      });
-    } else {
-      setState(() {
-        photo = "";
-      });
+    try {
+      var req = await Dio().post(
+          ApiConstant().baseUrl + ApiConstant().viewPhoto,
+          data: {'id': idOfUser});
+      var decode = req.data;
+      if (decode != "no_img") {
+        setState(() {
+          photo = decode;
+        });
+      } else {
+        setState(() {
+          photo = "";
+        });
+      }
+    } catch (e) {
+      print("network problem please refresh the page");
     }
   }
 

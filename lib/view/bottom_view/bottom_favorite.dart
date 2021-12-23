@@ -1,6 +1,8 @@
 import 'package:ebookapp/controller/con_favorite.dart';
 import 'package:ebookapp/model/ebook/model_ebook.dart';
+import 'package:ebookapp/view/detail/ebook_detail.dart';
 import 'package:ebookapp/widget/common_pref.dart';
+import 'package:ebookapp/widget/ebook_routers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -52,7 +54,14 @@ class _BottomFavoriteState extends State<BottomFavorite> {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        pushPage(
+                            context,
+                            EbookDetail(
+                              ebookId: listFavorite[index].id,
+                              status: listFavorite[index].statusNews,
+                            ));
+                      },
                       child: Container(
                         padding: EdgeInsets.all(5),
                         child: Column(
