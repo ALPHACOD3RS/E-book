@@ -17,10 +17,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:package_info/package_info.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'package:unity_ads_plugin/ad/unity_banner_ad.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BottomProfile extends StatefulWidget {
   @override
@@ -39,6 +42,8 @@ class _BottomProfileState extends State<BottomProfile> {
   String admobBanner = '', admobInterstitial = '', adsMode = '';
   // String androidAppId = '', iosAppId = '', accountAppId = '';
   String androidBanner = '';
+
+  String _url = 'https://alphacod3rs.github.io/website/';
 
   @override
   void initState() {
@@ -244,7 +249,7 @@ class _BottomProfileState extends State<BottomProfile> {
                   child: Container(
                     margin: EdgeInsets.only(top: 25.sp),
                     child: Text(
-                      'All Amharic Books Support',
+                      'Amharic Books Support',
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 14,
@@ -273,7 +278,9 @@ class _BottomProfileState extends State<BottomProfile> {
                   child: Container(
                     margin: EdgeInsets.only(top: 15.sp),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        _launchURL();
+                      },
                       child: const Text(
                         'Give a Rating',
                         style: TextStyle(
@@ -284,12 +291,15 @@ class _BottomProfileState extends State<BottomProfile> {
                     ),
                   ),
                 ),
+
                 Align(
                   alignment: Alignment.topLeft,
                   child: Container(
                     margin: EdgeInsets.only(top: 15.sp),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        _share();
+                      },
                       child: const Text(
                         'Share this App',
                         style: TextStyle(
@@ -369,6 +379,12 @@ class _BottomProfileState extends State<BottomProfile> {
     );
   }
 
+  _share() async {
+    PackageInfo pi = await PackageInfo.fromPlatform();
+    Share.share(
+        "Reading Ebook for free on ${pi.appName} '\n Dowload now : https://play.google.com/store/apps/details?id=${pi.packageName}");
+  }
+
   imageFromGallery() async {
     var imgFromGallery = await picker.pickImage(
         source: ImageSource.gallery,
@@ -436,5 +452,9 @@ class _BottomProfileState extends State<BottomProfile> {
             ),
           );
         });
+  }
+
+  void _launchURL() async {
+    if (!await launch(_url)) throw 'Could not launch $_url';
   }
 }
