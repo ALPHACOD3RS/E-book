@@ -81,48 +81,56 @@ class _BottomLibraryState extends State<BottomLibrary> {
               return GridView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
-                itemCount: snapshot.data!.length,
+                itemCount: snapshot.data!.length + 1,
                 itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      pushPage(
-                          context,
-                          EbookDetail(
-                            ebookId: listlatest[index].id,
-                            status: listlatest[index].statusNews,
-                          ));
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              listlatest[index].photo,
-                              fit: BoxFit.cover,
-                              height: 16.h,
+                  print(
+                      "what is index $index and snapshot ${snapshot.data!.length}");
+                  if (index == snapshot.data!.length) {
+                    return GestureDetector(
+                      onTap: () {
+                        pushPage(
+                            context,
+                            EbookDetail(
+                              ebookId: listlatest[index].id,
+                              status: listlatest[index].statusNews,
+                            ));
+                      },
+                    );
+                  } else {
+                    return GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                listlatest[index].photo,
+                                fit: BoxFit.cover,
+                                height: 15.h,
+                                width: 24.w,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 0.5.h,
+                            ),
+                            Container(
                               width: 24.w,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 0.5,
-                          ),
-                          Container(
-                            width: 24.w,
-                            child: Text(
-                              listlatest[index].title,
-                              style: TextStyle(color: Colors.black),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
+                              child: Text(
+                                listlatest[index].title,
+                                style: const TextStyle(color: Colors.black),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3, childAspectRatio: 5.5 / 9.0),
               );
             } else {
