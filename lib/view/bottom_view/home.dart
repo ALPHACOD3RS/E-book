@@ -266,102 +266,118 @@ class _HomeState extends State<Home> {
                       //latest ebook>>>>>>>>>>>>>>>>>>>>>>>
                       Container(
                         child: FutureBuilder(
-                          future: getLatest,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<ModelEbook>> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              return Column(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text(
-                                      'Latest Ebook',
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 17),
+                            future: getLatest,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<ModelEbook>> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                return Column(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Text(
+                                        'Latest Ebook',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 17),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    child: ListView.builder(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: snapshot.data!.length + 1,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          print(
-                                              "what is index $index and snapshot ${snapshot.data!.length}");
-                                          if (index == snapshot.data!.length) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                pushPage(
-                                                    context,
-                                                    EbookDetail(
-                                                      ebookId:
-                                                          listlatest[index].id,
-                                                      status: listlatest[index]
-                                                          .statusNews,
-                                                    ));
-                                              },
-                                              child: Container(
-                                                width: 24.w,
-                                                padding:
-                                                    EdgeInsets.only(top: 15.w),
-                                                child: const Text(
-                                                  'See All',
-                                                  style: TextStyle(
-                                                      color: Colors.blue),
-                                                  textAlign: TextAlign.center,
+                                    SizedBox(
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: snapshot.data!.length + 1,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            print(
+                                                "what is index $index and snapshot ${snapshot.data!.length}");
+                                            if (index ==
+                                                snapshot.data!.length) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  pushPage(
+                                                      context,
+                                                      EbookDetail(
+                                                        ebookId:
+                                                            listlatest[index]
+                                                                .id,
+                                                        status:
+                                                            listlatest[index]
+                                                                .statusNews,
+                                                      ));
+                                                },
+                                                child: Container(
+                                                  width: 24.w,
+                                                  padding: EdgeInsets.only(
+                                                      top: 15.w),
+                                                  child: const Text(
+                                                    'See All',
+                                                    style: TextStyle(
+                                                        color: Colors.blue),
+                                                    textAlign: TextAlign.center,
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          } else {
-                                            return GestureDetector(
-                                              onTap: () {},
-                                              child: Container(
-                                                padding: EdgeInsets.all(8),
-                                                child: Column(
-                                                  children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      child: Image.network(
-                                                        listlatest[index].photo,
-                                                        fit: BoxFit.cover,
-                                                        height: 15.h,
+                                              );
+                                            } else {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  pushPage(
+                                                      context,
+                                                      EbookDetail(
+                                                        ebookId:
+                                                            listlatest[index]
+                                                                .id,
+                                                        status:
+                                                            listlatest[index]
+                                                                .statusNews,
+                                                      ));
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.all(8),
+                                                  child: Column(
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: Image.network(
+                                                          listlatest[index]
+                                                              .photo,
+                                                          fit: BoxFit.cover,
+                                                          height: 15.h,
+                                                          width: 24.w,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 0.5.h,
+                                                      ),
+                                                      Container(
                                                         width: 24.w,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 0.5.h,
-                                                    ),
-                                                    Container(
-                                                      width: 24.w,
-                                                      child: Text(
-                                                        listlatest[index].title,
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.black),
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    )
-                                                  ],
+                                                        child: Text(
+                                                          listlatest[index]
+                                                              .title,
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .black),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          }
-                                        }),
-                                    height: 25.h,
-                                  )
-                                ],
-                              );
-                            } else {
-                              return Container();
-                            }
-                          },
-                        ),
+                                              );
+                                            }
+                                          }),
+                                      height: 25.h,
+                                    )
+                                  ],
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }),
                       ),
                       //ads here>>>>>>>>>>>>>>>>>>>>>>>>>>>
 

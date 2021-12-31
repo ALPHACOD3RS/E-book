@@ -23,6 +23,7 @@ import 'package:package_info/package_info.dart';
 import 'package:unity_ads_plugin/unity_ads.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 
+// ignore: must_be_immutable
 class EbookDetail extends StatefulWidget {
   int ebookId;
   int status;
@@ -430,6 +431,41 @@ class _EbookDetailState extends State<EbookDetail> {
                                                 left: 14, right: 14),
                                           ),
                                         ),
+
+                              SizedBox(
+                                height: 2.h,
+                              ),
+
+                              //ads are here>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                              adsMode == "1"
+                                  ? _isBannerAdsReady
+                                      ? Align(
+                                          alignment: Alignment.topCenter,
+                                          child: Container(
+                                            width:
+                                                _bannerAd.size.width.toDouble(),
+                                            height: _bannerAd.size.height
+                                                .toDouble(),
+                                            child: AdWidget(
+                                              ad: _bannerAd,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(
+                                          child: Text('Loading'),
+                                        )
+                                  : adsMode == "2"
+                                      ? UnityBannerAd(
+                                          placementId: UnityManager().gameId(
+                                              androidBanner, androidBanner),
+                                          listener: (state, arg) {
+                                            print(
+                                                "unity ads in flutter $state and this $arg");
+                                          },
+                                        )
+                                      : Container(),
+                              //ads>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
                               SizedBox(
                                 height: 3.h,
                               ),
@@ -451,7 +487,7 @@ class _EbookDetailState extends State<EbookDetail> {
                                     ),
                                     Html(
                                       data: '${listDetail[index].description}',
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
@@ -553,3 +589,6 @@ class _EbookDetailState extends State<EbookDetail> {
         });
   }
 }
+
+
+

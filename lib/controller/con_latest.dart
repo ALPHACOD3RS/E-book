@@ -25,6 +25,7 @@ Future<List<ModelEbook>> featchLatest(List<ModelEbook> fetch) async {
           free: ebook['free']));
     }
   } catch (e) {
+    // ignore: avoid_print
     print('Network error!, Please refresh the page');
   }
 

@@ -23,7 +23,7 @@ saveToFavorite(
         onWillPopActive: true,
         title: 'Added to Favorite',
         desc: 'This Ebook was added to your Favorite',
-        style: AlertStyle(
+        style: const AlertStyle(
           animationType: AnimationType.fromBottom,
           backgroundColor: Colors.white,
           titleStyle: TextStyle(color: Colors.black),

@@ -98,7 +98,14 @@ class _BottomLibraryState extends State<BottomLibrary> {
                     );
                   } else {
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                         pushPage(
+                             context,
+                            EbookDetail(
+                              ebookId: listlatest[index].id,
+                              status: listlatest[index].statusNews,
+                            )); 
+                      },
                       child: Container(
                         padding: EdgeInsets.all(8),
                         child: Column(
